@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  fullName  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  assessmentSessions AssessmentSession[]
+  studentAnswers     StudentAnswer[]
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  subject     String
+  classLevel  String
+  order       Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  content              ChapterContent[]
+  mcqs                 MCQ[]
+  assessmentSessions   AssessmentSession[]
+}
+
+model ChapterContent {
+  id        String   @id @default(cuid())
+  chapterId String
+  topic     String
+  content   String
+  order     Int
+  
+  // Multimedia Resources
+  diagramUrl    String?  // URL to diagram image
+  diagramTitle  String?  // Title/caption for diagram
+  chartUrl      String?  // URL to chart/graph image
+  chartTitle    String?  // Title/caption for chart
+  youtubeUrl    String?  // YouTube video URL
+  videoTitle    String?  // Video title
+  keyPoints     String?  // JSON array of key points
+  resources     String?  // JSON array of additional resources with URLs
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@index([chapterId])
+}
+
+model MCQ {
+  id          String   @id @default(cuid())
+  chapterId   String
+  question    String
+  optionA     String
+  optionB     String
+  optionC     String
+  optionD     String
+  correctOption String // A, B, C, or D
+  explanation String
+  difficulty  String   @default("medium") // easy, medium, hard
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapter        Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  studentAnswers StudentAnswer[]
+
+  @@index([chapterId])
+}
+
+model AssessmentSession {
+  id            String   @id @default(cuid())
+  userId        String
+  chapterId     String
+  startedAt     DateTime @default(now())
+  submittedAt   DateTime?
+  duration      Int? // in seconds
+  totalQuestions Int
+  correctAnswers Int?
+  score         Float?
+  percentage    Float?
+  accuracy      Float?
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter        Chapter         @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  studentAnswers StudentAnswer[]
+
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model StudentAnswer {
+  id                 String   @id @default(cuid())
+  assessmentSessionId String
+  userId             String
+  mcqId              String
+  selectedOption     String? // A, B, C, D, or null if skipped
+  isCorrect          Boolean?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  assessmentSession AssessmentSession @relation(fields: [assessmentSessionId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mcq               MCQ               @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentSessionId, mcqId, userId])
+  @@index([assessmentSessionId])
+  @@index([userId])
+  @@index([mcqId])
+}
+
+model PerformanceMetrics {
+  id                String   @id @default(cuid())
+  userId            String
+  chapterId         String
+  totalAttempts     Int      @default(0)
+  totalScore        Float    @default(0)
+  averageScore      Float    @default(0)
+  averageAccuracy   Float    @default(0)
+  bestScore         Float    @default(0)
+  correctAnswers    Int      @default(0)
+  incorrectAnswers  Int      @default(0)
+  skippedQuestions  Int      @default(0)
+  completionStatus  String   @default("not_started") // not_started, in_progress, completed
+  lastAttemptAt     DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

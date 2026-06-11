@@ -1,0 +1,179 @@
+Technology Requirements
+Frontend
+Next.js (App Router)
+
+TypeScript
+
+Tailwind CSS
+
+Backend
+Node.js / Next.js API Routes
+
+Database
+PostgreSQL
+
+Prisma ORM (preferred)
+
+Deployment
+Frontend: Vercel
+
+Backend and Database: Any suitable production deployment platform
+
+Functional Requirements
+1. Authentication Module
+Implement:
+
+Student Registration
+
+Student Login
+
+Logout Functionality
+
+User data must be stored securely in PostgreSQL.
+
+2. Chapter Content Managemen
+Select one academic chapter (for example, Class 10 Science – Life Processes, or any equivalent chapter).
+
+Create:
+
+Chapter record
+
+Structured content storage
+
+Topic-wise organization
+
+Store and retrieve content from the database via backend APIs.
+
+3. Learning Experienc
+Create a chapter study page containing:
+
+Chapter Overview
+
+Topic-wise Learning Sections
+
+Key Concepts
+
+Revision Notes
+
+The content should be rendered dynamically from backend APIs.
+
+4. MCQ Assessment Module
+Create a minimum of 20 MCQs for the selected chapter.
+
+Each MCQ must contain:
+
+Question
+
+Four Options
+
+Correct Answer
+
+Explanation
+
+Questions must be stored in the database and retrieved through APIs.
+
+5. Online Examination Workflo
+Implement a complete assessment flow:
+
+Start Assessment
+Create assessment session
+
+Store session details in database
+
+Assessment Interface
+Display questions
+
+Next / Previous navigation
+
+Answer selection
+
+Timer
+
+Auto-save answers
+
+Submission
+Calculate score
+
+Calculate percentage
+
+Calculate accuracy
+
+Store all results in the database.
+
+6. Performance Dashboard
+Create a student dashboard displaying:
+
+Total Attempts
+
+Scores
+
+Accuracy
+
+Correct Answers
+
+Incorrect Answers
+
+Skipped Questions
+
+Chapter Completion Status
+
+All information should be fetched from the database via APIs.
+
+Database Design
+At minimum, the solution should include tables for:
+
+Users
+
+Chapters
+
+Chapter Content
+
+MCQs
+
+Assessment Sessions
+
+Student Answers
+
+Results
+
+You should be able to justify your schema design during the review discussion.
+
+API Requirements
+Create and document APIs for:
+
+Authentication
+Register
+
+Login
+
+Chapters
+List Chapters
+
+Get Chapter Details
+
+Assessments
+Start Assessment
+
+Save Answer
+
+Submit Assessment
+
+Dashboard
+Fetch Performance Data
+
+UI/UX Expectations
+The application should demonstrate production-quality standards:
+
+Responsive Design
+
+Mobile Compatibility
+
+Loading States
+
+Error Handling
+
+Clean User Experience
+
+Consistent Design System
+
+Basic unstyled interfaces will not be considered sufficient
